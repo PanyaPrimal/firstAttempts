@@ -19,3 +19,221 @@ body {
     margin: auto;
     max-width: 1170px;
 }
+.menu {
+    display: flex;
+    justify-content: space-between;
+    
+    &__element {
+        position: relative;
+        font-size: 14px;
+        color: rgb(51, 51, 51);
+        display: flex;
+        justify-content: space-between;
+        line-height: initial;
+        padding: 17px 0px 17px 0px;
+
+        &:first-child {
+            padding-left: 28px;
+        }
+        &:last-child {
+            padding-right: 20px;
+        }
+        &:hover::after,
+        &-active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background-color: red;
+        }
+        &-img {
+            height: 26px;
+            width: 26px;
+        }
+    }
+    
+    &__element1-img {background: url(/img/menu__element1.svg) no-repeat;}
+    &__element2-img {background: url(/img/menu__element2.svg) no-repeat;}
+    &__element3-img {background: url(/img/menu__element3.svg) no-repeat;}
+    &__element4-img {background: url(/img/menu__element4.svg) no-repeat;}
+    &__element5-img {background: url(/img/menu__element5.svg) no-repeat;}
+}
+.header {
+    &__nav-background {
+        background: url(/img/header__nav-background.jpg) no-repeat;
+        background-size: cover;
+    }
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    &__logo img {
+        padding: 20px 0px 20px;
+    }
+
+    &__menu {
+        display: flex;
+        justify-content: space-between;
+        width: 43%;
+    }
+
+    &__menu-element {
+        font-size: 16px;
+        font-family: "Manrope";
+        color: rgb(51, 51, 51);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+        
+    &__phone-element {
+        display: flex;
+    }
+
+    &__phone-tel-icon {
+        background: url(/img/phone-tel-icon.svg) no-repeat;
+        background-size: cover;
+        height: 46px;
+        width: 46px;
+    }
+
+    &__phone-tel-container {
+        display: grid;
+        align-items: center;
+        font-size: 16px;
+        font-family: "Manrope";
+        color: rgb(51, 51, 51);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+}
+.main {
+    &__block1-background {
+        background: url(/img/main__block1-background.jpg) no-repeat;
+        background-size: cover;
+    }
+}
+.block1 {
+    padding: 0 0 200px 0;
+
+    &__article {
+        padding: 120px 0 55px 0;
+        font-size: 48px;
+        font-family: "Manrope";
+        font-weight: 500;
+        color: rgb(51, 51, 51);
+        line-height: 1.2;
+    }
+
+    &__services-container {
+        font-size: 18px;
+        font-family: "Manrope";
+        color: rgb(85, 85, 85);
+    }
+
+    &__service1 {
+        display: flex;
+        padding-bottom: 25px;
+    }
+
+    &__service2 {
+        display: flex;
+        padding-bottom: 80px;
+    }
+    &__service-circle {
+        background: url(/img/block__service-circle.svg) no-repeat;
+        background-size: cover;
+        height: 8px;
+        width: 8px;
+        margin-top: 5px;
+    }
+    &__service-text {
+        padding-left: 10px;
+    }
+
+    &__order-button {
+        display: inline-block;
+        width: 290px;
+        padding: 33px 0px 33px 0px; 
+        border-radius: 4px;
+        font-size: 18px;
+        font-family: "Manrope";
+        color: rgb(255, 255, 255);
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: center;
+        
+
+        background: rgb(254,27,20);
+        background-image: url(/img/block1__order-button-bg.png );
+        box-shadow: 0px 6px rgb(156, 20, 16);
+    }
+    &__order-button:hover {
+        background-image: linear-gradient( 90deg, rgb(254,27,20) 0%, rgb(255,84,79) 100%);
+    }
+    &__order-button:active {
+        box-shadow: 0px 2px rgb(156, 20, 16),
+        inset 0px 2px 2px 0px rgba(255, 255, 255, 0.75);
+        transform: translate(0, 4px);
+        transition: 0.2s;
+    }
+}
+.main {
+
+    &__block2-background {
+        background: url(/img/main__block2-background.jpg) no-repeat;
+        background-size: cover;
+    }
+}
+.block2 {
+    &__item-container {
+        padding: 120px 0 0 500px;
+    }
+    &__article {
+        font-size: 38px;
+        font-family: "Manrope";
+        color: rgb(51, 51, 51);
+        max-width: 370px;
+    }
+          
+    &__offer-description {
+        font-size: 16px;
+        font-family: "Manrope";
+        color: rgb(85, 85, 85);
+        line-height: 1.5;
+        padding: 40px 0;
+        max-width: 580px;
+    }
+
+    &__offer-terms-container {
+            font-size: 16px;
+            font-family: "Manrope";
+            color: rgb(85, 85, 85);
+            line-height: 1.5;
+            display: flex;
+            max-width: 520px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding-bottom: 120px;
+    }
+
+    &__offer-terms-container-term {
+        display: flex;
+        align-items: center;
+        padding-bottom: 20px;
+    }
+    &__offer-terms-container-term-text {
+        max-width: 170px;
+    }
+    &__offer-terms-container-term-img {
+        background: url(/img/block2__term-img.svg) no-repeat;
+        background-size: cover; 
+        height: 64px;
+        width: 64px;
+        margin-right: 15px;
+    }
+}
+
