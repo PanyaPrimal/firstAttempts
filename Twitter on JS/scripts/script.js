@@ -1,11 +1,34 @@
+class FetchData {
+
+    getResourse = async url => {
+        const res = await fetch(url);
+
+        if(!res.ok) {
+            throw new Error('Произошла ошибка' + res.status)
+        }
+
+        return res.json();
+    }
+    getPost = () => this.getResourse('db/database.json');
+}
 
 
 class Twitter {
     constructor({ listElem }) {
+        const fetchData = new FetchData();
         this.tweets = new Posts({});
         this.elements = {
             listElem: document.querySelector(listElem)
         }
+
+        fetchData.getPost()
+            .then(data => {
+                data.forEach(item => {
+                    this.tweets.addPost
+                }, this)
+            });
+
+        console.log('this.tweets: ', this.tweets);
     }
 
     renderPost() {
@@ -34,9 +57,14 @@ class Posts {
         this.posts = posts;
     }
 
-    addPost(tweet) {
-        this.tweets.push(new Post(tweet));
+    addPost(tweets) {
+        this.tweets.push(tweets, i, arr);
+        console.log(tweets);
+        console.log(i);
+        console.log(arr);
+        this.posts.push(tweets);
     }
+
     deletePost(id) {
 
     }
@@ -48,14 +76,14 @@ class Posts {
 
 
 class Post {
-    constructor(param) {
-        this.id = param.id
-        this.userName = param.userName;
-        this.nickname = param.nickname;
-        this.postDate = param.postDate;
-        this.test = param.test;
-        this.img = param.img;
-        this.likes = param.likes;
+    constructor({ id, userName, nickname, postDate, text, img, likes = 0 }) {
+        this.id = id || this.generateID();
+        this.userName = userName;
+        this.nickname = nickname;
+        this.postDate = postDate ? new Date(postDate) : new Date();
+        this.test = text;
+        this.img = img;
+        this.likes = likes;
         this.liked = false;
     };
 
@@ -66,6 +94,23 @@ class Post {
         } else {
             this.likes--;
         }
+    }
+
+    generateID() {
+        return Math.random().toString(32).substring(2) + (+new Date).toString(32);
+    }
+
+    getDate() {
+
+        const options = {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit',
+            minutes: '2-digit',
+        }
+
+        return this.postDate.toLocaleString('ru-Ru', options)
     }
 }
 
@@ -78,4 +123,3 @@ const twitter = new Twitter({
     listElem: '.tweet-list'
 })
 
-console.log('twitter: ', twitter);
