@@ -1,28 +1,31 @@
+class Task {
+    constructor() {
+        this.onComplete = [];
+        this.onFail = [];
+    }
+
+    done(completeCallback, failCallback) {
+        if (typeof completeCallback === 'function') {
+            this.onComplete.push(completeCallback);
+        }
+
+        if (typeof failCallback === 'function') {
+            this.onFail.push(failCallback);
+        }
+    }
+
+    complete(result) {
+        this.onComplete.forEach(callback => callback(result));
+    }
+
+    fail(reason) {
+        this.onFail.forEach(callback => callback(reason));
+    }
+}
+
 const http = {
     get(url) {
-        let task = {
-            onComplete: [],
-            onFail: [],
-
-            done(completeCallback, failCallback) {
-                if (typeof completeCallback === 'function') {
-                    this.onComplete.push(completeCallback);
-                }
-
-                if (typeof failCallback === 'function') {
-                    this.onFail.push(failCallback);
-                }
-                
-            },
-
-            complete(result) {
-                this.onComplete.forEach(callback => callback(result));
-            },
-
-            fail(reason) {
-                this.onFail.forEach(callback => callback(reason));
-            }
-        };
+        let task = new Task();
 
         if (!url) throw new Error('URL ne peredan');
 
