@@ -30,15 +30,19 @@ class Task {
     }
 
     complete(result) {
-        this.result = result;
-        this.state = Task.state.SUCCEEDED;
-        this.onComplete.forEach(callback => callback(result));
+        if (this.state === Task.state.PENDING) {
+            this.result = result;
+            this.state = Task.state.SUCCEEDED;
+            this.onComplete.forEach(callback => callback(result));
+        }
     }
 
     fail(reason) {
-        this.reason = reason;
-        this.state = Task.state.FAILED;
-        this.onFail.forEach(callback => callback(reason));
+        if (this.state === Task.state.PENDING) {
+            this.reason = reason;
+            this.state = Task.state.FAILED;
+            this.onFail.forEach(callback => callback(reason));
+        }
     }
 }
 
@@ -78,11 +82,12 @@ const http = {
     }
 };
 
-let getUser = http.get(`https://jsonplaceholder.typicode.com/users/1`);
-
-getUser.done(
-    user => console.log(user),
-    error => console.error(error)
-);
-
-getUser.done(user => console.log(user));
+http.get(`https://jsonplaceholder.typicode.com/users/1`)
+    .done(
+        user => {
+            http.get(`https://jsonplaceholder.typicode.com/posts?userId=1`)
+                .done(
+                    posts => console.log(posts),
+                    error => console.log(error)
+                );
+        }, error => console.error(error));
