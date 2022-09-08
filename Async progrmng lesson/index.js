@@ -1,10 +1,12 @@
 class Task {
-    constructor() {
+    constructor(execute) {
         this.state = Task.state.PENDING;
         this.result = null;
         this.reason = null;
         this.onComplete = [];
         this.onFail = [];
+
+        execute(this.complete.bind(this), this.fail.bind(this));
     }
 
     done(completeCallback, failCallback) {
@@ -46,34 +48,31 @@ Task.state = {
 
 const http = {
     get(url) {
-        let task = new Task();
-
         if (!url) throw new Error('URL ne peredan');
 
-        let request = new XMLHttpRequest();
+        return new Task((complete, fail) => {
+            let request = new XMLHttpRequest();
 
-        request.onload = function() {
-            if (this.status === 200) {
-                try {
-                    let data = JSON.parse(this.response);
-                    task.complete(data);
-                } catch (error) {
-                    task.fail(error);
+            request.onload = function() {
+                if (this.status === 200) {
+                    try {
+                        let data = JSON.parse(this.response);
+                        complete(data);
+                    } catch (error) {
+                        fail(error);
+                    }
+                } else {
+                    fail(this.statusText);
                 }
-            } else {
-                task.fail(this.statusText);
-            }
-        };
+            };
 
-        request.onerror = function(error) {
-            task.fail(error);
-        };
+            request.onerror = function(error) {
+                fail(error);
+            };
         
-        request.open('GET', url);
-        request.send(); 
-
-
-        return task;
+            request.open('GET', url);
+            request.send(); 
+        });
     }
 };
 
