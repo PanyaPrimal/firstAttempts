@@ -1,10 +1,12 @@
 const http = {
     get(url) {
         let task = {
-            
+            onComplete: [],
+            onFail: [],
+
             setCallbacks(completeCallback, failCallback) {
-                this.completeCallback = completeCallback;
-                this.failCallback = failCallback;
+                this.onComplete.push(completeCallback);
+                this.onFail.push(failCallback);
             }
         };
 
@@ -16,30 +18,32 @@ const http = {
             if (this.status === 200) {
                 try {
                     let data = JSON.parse(this.response);
-                    task.completeCallback(data);
+                    task.onComplete.forEach(callback => callback(data));
                 } catch (error) {
-                    task.failCallback(error);
+                    task.onFail.forEach(callback => callback(data));
                 }
             } else {
-                task.failCallback(this.statusText);
+                task.onFail.forEach(callback => callback(data));
             }
         };
 
         request.onerror = function(error) {
-            task.failCallback(error);
+            task.onFail.forEach(callback => callback(data));
         };
         
         request.open('GET', url);
-        request.send();
+        request.send(); 
 
 
         return task;
     }
 };
 
-let task = http.get(`https://jsonplaceholder.typicode.com/users/1`);
+let getUser = http.get(`https://jsonplaceholder.typicode.com/users/1`);
 
-task.setCallbacks(
+getUser.setCallbacks(
     user => console.log(user),
     error => console.error(error)
 );
+
+getUser.setCallbacks(user => console.log(user));
