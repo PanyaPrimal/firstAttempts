@@ -7,6 +7,14 @@ const http = {
             setCallbacks(completeCallback, failCallback) {
                 this.onComplete.push(completeCallback);
                 this.onFail.push(failCallback);
+            },
+
+            complete(result) {
+                this.onComplete.forEach(callback => callback(result));
+            },
+
+            fail(reason) {
+                this.onFail.forEach(callback => callback(reason));
             }
         };
 
@@ -18,17 +26,17 @@ const http = {
             if (this.status === 200) {
                 try {
                     let data = JSON.parse(this.response);
-                    task.onComplete.forEach(callback => callback(data));
+                    task.complete(data);
                 } catch (error) {
-                    task.onFail.forEach(callback => callback(data));
+                    task.fail(error);
                 }
             } else {
-                task.onFail.forEach(callback => callback(data));
+                task.fail(this.statusText);
             }
         };
 
         request.onerror = function(error) {
-            task.onFail.forEach(callback => callback(data));
+            task.fail(error);
         };
         
         request.open('GET', url);
