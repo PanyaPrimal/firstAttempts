@@ -6,7 +6,9 @@ class Task {
         this.onComplete = [];
         this.onFail = [];
 
-        execute(this.complete.bind(this), this.fail.bind(this));
+        if (typeof execute === 'function') {
+            execute(this.complete.bind(this), this.fail.bind(this));
+        }
     }
 
     done(completeCallback, failCallback) {
