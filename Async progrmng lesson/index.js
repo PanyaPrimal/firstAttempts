@@ -4,9 +4,15 @@ const http = {
             onComplete: [],
             onFail: [],
 
-            setCallbacks(completeCallback, failCallback) {
-                this.onComplete.push(completeCallback);
-                this.onFail.push(failCallback);
+            done(completeCallback, failCallback) {
+                if (typeof completeCallback === 'function') {
+                    this.onComplete.push(completeCallback);
+                }
+
+                if (typeof failCallback === 'function') {
+                    this.onFail.push(failCallback);
+                }
+                
             },
 
             complete(result) {
@@ -49,9 +55,9 @@ const http = {
 
 let getUser = http.get(`https://jsonplaceholder.typicode.com/users/1`);
 
-getUser.setCallbacks(
+getUser.done(
     user => console.log(user),
     error => console.error(error)
 );
 
-getUser.setCallbacks(user => console.log(user));
+getUser.done(user => console.log(user));
