@@ -1,52 +1,102 @@
 class Task {
-    constructor(execute) {
+    static defer(fn) {
+        setTimeout(fn, 0);
+    }
+
+    static isTask(value) {
+        return value instanceof Task;
+    }
+
+    static complete(value) {
+        return new Task (complete => complete(value));
+    }
+
+    static fail(value) {
+        return new Task (fail => fail(error));
+    }
+    
+    constructor(executor) {
         this.state = Task.state.PENDING;
         this.result = null;
         this.reason = null;
-        this.onComplete = [];
+        this.onSuccess = [];
         this.onFail = [];
 
-        if (typeof execute === 'function') {
-            execute(this.complete.bind(this), this.fail.bind(this));
+        if (executor) {
+            executor(this.complete.bind(this), this.fail.bind(this));
         }
     }
 
-    then(completeCallback, failCallback) {
-        return new Task((complete, fail) => {
-            if (typeof completeCallback === 'function') {
-                this.onComplete.push(completeCallback);
-            }
+    complete(value) {
+        let isTask = Task.isTask(value);
 
-            if (typeof failCallback === 'function') {
-                this.onFail.push(failCallback);
-            }
-            
-            if (this.state !== Task.state.PENDING) {
-                if (this.state === Task.state.SUCCEEDED) {
-                    completeCallback(this.result);
-                    complete(this.result);
-                } else if (this.state === Task.state.FAILED) {
-                    failCallback(this.reason);
-                    fail(this.reason);
-                }
+        if (isTask) {
+            let task = value;
+
+            task.then(
+                value => this.complete(value),
+                reason => this.fail(reason)
+            );
+        } else {
+            this.succeed(value);
+        }
+    }
+
+    succeed(result) {
+        this.state = Task.state.SUCCEEDED;
+        this.result = result;
+        this.onSuccess.forEach(callback => callback(result));
+    }
+
+    fail(error) {
+        this.state = Task.state.FAILED;
+        this.error = error;
+        this.onFail.forEach(callback => callback(error));
+    }
+
+    done(onSuccess, onFail) {
+        Task.defer(() => {
+            if (this.state === Task.state.PENDING) {
+                this.onSuccess.push(onSuccess);
+                this.onFail.push(onFail);
+            } else if (this.state === Task.state.SUCCEEDED && typeof onSuccess === 'function') {
+                onSuccess(this.result);
+            } else if (this.state === Task.state.FAILED && typeof onFail === 'function') {
+                onFail(this.reason);
             }
         });
     }
 
-    complete(result) {
-        if (this.state === Task.state.PENDING) {
-            this.result = result;
-            this.state = Task.state.SUCCEEDED;
-            this.onComplete.forEach(callback => callback(result));
-        }
+    then(onSuccess, onFail) {
+        return new Task((complete, fail) => {
+            this.done(
+                result => {
+                    if (typeof onSuccess === 'function') {
+                        try{
+                            complete(onSuccess(result));
+                        } catch (error) {
+                            fail(error);
+                        }
+                    } else {
+                        complete(result);
+                    }
+                },
+                reason => {
+                    if (typeof onFail === 'function') {
+                        try{
+                            complete(onFail(reason));
+                        } catch (error) {
+                            fail(error);
+                        }
+                    } else {
+                        fail(reason);
+                    }
+                }
+            );
+        });
     }
-
-    fail(reason) {
-        if (this.state === Task.state.PENDING) {
-            this.reason = reason;
-            this.state = Task.state.FAILED;
-            this.onFail.forEach(callback => callback(reason));
-        }
+    catch(onFail) {
+        return this.then(null, onFail);
     }
 }
 
@@ -86,9 +136,7 @@ const http = {
     }
 };
 
-let getPostsTask = new Task();
-
-http.get(`https://jsonplaceholder.typicode.com/users/1`)
+http.get(`https://jsonplaceholder.typicode.com/users?userId=1`)
     .then(user => {
         console.log(user);
         
