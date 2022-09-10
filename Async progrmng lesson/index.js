@@ -82,12 +82,15 @@ const http = {
     }
 };
 
-http.get(`https://jsonplaceholder.typicode.com/users/1`)
-    .done(
-        user => {
-            http.get(`https://jsonplaceholder.typicode.com/posts?userId=1`)
-                .done(
-                    posts => console.log(posts),
-                    error => console.log(error)
-                );
-        }, error => console.error(error));
+let getPostsTask = new Task();
+
+http.get(`https://jsonplaceholder.typicode.com/users/1`).done(user => {
+    console.log(user);
+    http.get(`https://jsonplaceholder.typicode.com/posts?userId=1`)
+    .done(posts => { 
+        getPostsTask.complete(posts);
+    });
+});
+
+getPostsTask.done(posts => console.log(posts));
+ 
