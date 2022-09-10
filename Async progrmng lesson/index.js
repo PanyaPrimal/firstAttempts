@@ -11,22 +11,26 @@ class Task {
         }
     }
 
-    done(completeCallback, failCallback) {
-        if (typeof completeCallback === 'function') {
-            this.onComplete.push(completeCallback);
-        }
-
-        if (typeof failCallback === 'function') {
-            this.onFail.push(failCallback);
-        }
-        
-        if (this.state !== Task.state.PENDING) {
-            if (this.state === Task.state.SUCCEEDED) {
-                completeCallback(this.result);
-            } else if (this.state === Task.state.FAILED) {
-                failCallback(this.reason);
+    then(completeCallback, failCallback) {
+        return new Task((complete, fail) => {
+            if (typeof completeCallback === 'function') {
+                this.onComplete.push(completeCallback);
             }
-        }
+
+            if (typeof failCallback === 'function') {
+                this.onFail.push(failCallback);
+            }
+            
+            if (this.state !== Task.state.PENDING) {
+                if (this.state === Task.state.SUCCEEDED) {
+                    completeCallback(this.result);
+                    complete(this.result);
+                } else if (this.state === Task.state.FAILED) {
+                    failCallback(this.reason);
+                    fail(this.reason);
+                }
+            }
+        });
     }
 
     complete(result) {
@@ -84,13 +88,11 @@ const http = {
 
 let getPostsTask = new Task();
 
-http.get(`https://jsonplaceholder.typicode.com/users/1`).done(user => {
-    console.log(user);
-    http.get(`https://jsonplaceholder.typicode.com/posts?userId=1`)
-    .done(posts => { 
-        getPostsTask.complete(posts);
-    });
-});
-
-getPostsTask.done(posts => console.log(posts));
+http.get(`https://jsonplaceholder.typicode.com/users/1`)
+    .then(user => {
+        console.log(user);
+        
+        return http.get(`https://jsonplaceholder.typicode.com/posts?userId=1`)
+    })
+    .then(posts => console.log(posts));
  
