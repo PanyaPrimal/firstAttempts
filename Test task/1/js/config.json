@@ -1,0 +1,10 @@
+{
+    "type": "module",
+    "valuesInMillimeters": {
+        "cm": 10,
+        "m": 1000,
+        "in": 25.4,
+        "ft": 304.8
+    }
+}
+
