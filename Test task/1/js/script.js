@@ -14,7 +14,6 @@ class UnitsConverter {
         };
 
         const exitValue = JSON.stringify(resultAnswer);
-        console.log(exitValue);
         return exitValue;
         
     }
@@ -34,12 +33,26 @@ class UnitsConverter {
     
 }
 
-let converter = new UnitsConverter;
-converter.convert(`{"distance": {"unit": "m", "value": 0.5}, "convert_to": "ft"}`);
+function convert(json) {
+    const converter = new UnitsConverter();
+    const result = converter.convert(json);
+    downloadJson(result);
+}
 
-converter.addValuesToConfig(config, 'mm', 1);
-converter.addValuesToConfig(config, 'yd', 914.4);
-converter.addValuesToConfig(config, 'km', 1000000);
+function downloadJson(json) {
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(json);
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute('href', dataStr);
+    downloadAnchorNode.setAttribute('download', 'result.json');
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+}
 
-converter.convert(`{"distance": {"unit": "m", "value": 5000}, "convert_to": "km"}`);
+const input = document.querySelector('#file');
+input.addEventListener('change', function(event){
+    var reader = new FileReader();
+    reader.onload = event => convert(event.target.result);
+    reader.readAsText(event.target.files[0]);
 
+})
