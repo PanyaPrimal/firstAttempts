@@ -1,0 +1,14 @@
+{
+    "data": [
+        {"email": "mike@mail.com", "name": "John", "rating": 210, "disabled": false},
+        {"email": "cgreg@mail.com", "name": "Jess", "rating": 14, "disabled": false},
+        {"email": "agreg@mail.com", "name": "Andrew", "rating": 12, "disabled": true},
+        {"email": "dgreg@mail.com", "name": "John", "rating": 228, "disabled": false},
+        {"email": "john@mail.com", "name": "John", "rating": 25, "disabled": true}
+    ],
+    "condition": {
+        "include": [{"name": "John"}],
+        "exclude": [{"disabled": true}], 
+        "sort_by": ["email"]
+    }
+}
