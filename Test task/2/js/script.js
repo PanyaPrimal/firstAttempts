@@ -41,9 +41,12 @@ class SortingAndSelection {
             if (value.condition.sort_by) {
                 result = this.sortBy(result, value.condition.sort_by);
             }
+            
         }
-
-        return result;
+        console.log(result);
+        let exitJSON = JSON.stringify(result);
+        return exitJSON;
+        
     }
     
     sortBy(data, fields) {
