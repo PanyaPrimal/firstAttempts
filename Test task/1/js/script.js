@@ -25,7 +25,7 @@ class UnitsConverter {
     getMillimeters(value, unit) {
         return value*config.valuesInMillimeters[unit];
     }
-
+    
     addValuesToConfig(json, unit, value) {
         json.valuesInMillimeters = { ...json.valuesInMillimeters, [unit]: value };
         return json;
