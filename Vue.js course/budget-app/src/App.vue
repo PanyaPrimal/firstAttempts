@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <MultyForm />
     <TotalBalance :total="totalBalance"/>
     <BudgetList :list="list" @deleteItem="onDeleteItem"/>
   </div>
@@ -8,12 +9,14 @@
 <script>
 import BudgetList from '@/components/BudgetList';
 import TotalBalance from '@/components/TotalBalance';
+import MultyForm from '@/components/MultyForm';
 
 export default {
   name: 'app',
   components: {
     BudgetList,
     TotalBalance,
+    MultyForm
   },
   data: () => ({
     list: {
@@ -46,6 +49,7 @@ export default {
   }
 
 };
+
 </script>
 
 <style>
