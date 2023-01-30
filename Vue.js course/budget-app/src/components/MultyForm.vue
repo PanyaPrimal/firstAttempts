@@ -1,16 +1,16 @@
 <template>
   <ElCard class="form-card">
-    <ElForm :model="formData">
-      <ElFormItem lable="Type" prop="type">
+    <ElForm :model="formData" :rules="rules" label-position="top">
+      <ElFormItem label="Type" prop="type">
         <ElSelect class="type-select" v-model="formData.type" placeholder="Choose type...">
-          <ElOption lable="Income" value="INCOME"/>
-          <ElOption lable="Outcome" value="OUTCOME"/>
+          <ElOption label="Income" value="INCOME"/>
+          <ElOption label="Outcome" value="OUTCOME"/>
         </ElSelect>
       </ElFormItem>
-      <ElFormItem lable="Comments" prop="comment">
+      <ElFormItem label="Comments" prop="comment">
         <ElInput v-model="formData.comment" />
       </ElFormItem>
-      <ElFormItem lable="Value" prop="value">
+      <ElFormItem label="Value" prop="value">
         <ElInput v-model.number="formData.value" />
       </ElFormItem>
       <ElButton @click="onSubmit" type="primary">Submit</ElButton>
@@ -27,6 +27,14 @@ export default {
       type: 'INCOME',
     comment: '',
     value: 0
+    },
+    rules: {
+      type: [{ required: true, message: "Please select type", trigger: "blur" }],
+      comment: [{ required: true, message: "Please input comment", trigger: "change" }],
+      value: [
+        { required: true, message: "Please input value", trigger: "change" },
+        { type: "number", message: "Value must be a nummber", trigger: "change" }
+    ]
     }
   }),
   methods: {
