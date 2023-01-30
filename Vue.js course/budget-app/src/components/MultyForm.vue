@@ -1,6 +1,6 @@
 <template>
   <ElCard class="form-card">
-    <ElForm :model="formData" :rules="rules" label-position="top">
+    <ElForm :model="formData" ref="addItemForm" :rules="rules" label-position="top">
       <ElFormItem label="Type" prop="type">
         <ElSelect class="type-select" v-model="formData.type" placeholder="Choose type...">
           <ElOption label="Income" value="INCOME"/>
@@ -39,7 +39,12 @@ export default {
   }),
   methods: {
     onSubmit() {
-
+      this.$refs.addItemForm.validate(valid => {
+        if (valid) {
+          this.$emit("submitForm", { ...this.formData});
+          this.$refs.addItemForm.resetFields();
+        }
+      });
     }
   }
 };
